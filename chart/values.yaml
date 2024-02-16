@@ -6,3 +6,12 @@ domain: localtest.me
 externalPort: "9443"
 isOpenShift: "false"
 installPostgreSQL: true
+
+# List of Control Planes to create
+cp:
+  cp1:
+  imbs1:
+    type: vcluster
+    hook: ocm
+  wds1:
+    hook: kubestellar
