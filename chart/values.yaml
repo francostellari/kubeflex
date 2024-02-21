@@ -5,7 +5,14 @@
 domain: localtest.me
 externalPort: "9443"
 isOpenShift: "false"
+
+# Enable/disable the automatic installation of the PostgreSQL dependency
 installPostgreSQL: true
+
+# Enable/disable the automatic installation of specific post create hooks
+pch:
+  kubestellar: true
+  ocm: true
 
 # List of Control Planes to create
 cp:

@@ -1,0 +1,16 @@
+{{- range $name, $opt := .Values.cp }}
+---
+apiVersion: tenancy.kflex.kubestellar.org/v1alpha1
+kind: ControlPlane
+metadata:
+  name: {{ $name }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  backend: shared
+  {{ if $opt }}
+  postCreateHook: {{ $opt.hook | default "" }}
+  type: {{ $opt.type | default "k8s" }}
+  {{ else }}
+  type: "k8s"
+  {{ end }}
+{{- end }}
