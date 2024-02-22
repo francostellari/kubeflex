@@ -9,7 +9,7 @@ isOpenShift: "false"
 # Enable/disable the automatic installation of the PostgreSQL dependency
 installPostgreSQL: true
 
-# Enable/disable the automatic installation of specific post create hooks
+# Enable/disable the automatic installation of specific Post Create Hooks
 pch:
   kubestellar: true
   ocm: true
@@ -17,8 +17,8 @@ pch:
 # List of Control Planes to create
 cp:
   cp1:
-  imbs1:
-    type: vcluster
-    hook: ocm
-  wds1:
-    hook: kubestellar
+  # imbs1:
+  #   type: vcluster
+  #   pch: ocm
+  # wds1:
+  #   pch: kubestellar

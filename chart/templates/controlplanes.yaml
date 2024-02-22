@@ -8,7 +8,9 @@ metadata:
 spec:
   backend: shared
   {{ if $opt }}
-  postCreateHook: {{ $opt.hook | default "" }}
+  {{ if $opt.pch }}
+  postCreateHook: {{ $opt.pch  }}
+  {{ end }}
   type: {{ $opt.type | default "k8s" }}
   {{ else }}
   type: "k8s"
