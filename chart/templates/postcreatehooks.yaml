@@ -1,4 +1,4 @@
-{{- if eq (toString .Values.pch.kubestellar) "true" }}
+{{- if .Values.pch.kubestellar }}
 ---
 apiVersion: tenancy.kflex.kubestellar.org/v1alpha1
 kind: PostCreateHook
@@ -11,7 +11,7 @@ spec:
   - apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
-      name: "{{.Namespace}}-{{.HookName}}"
+      name: "{{"{{.Namespace}}-{{.HookName}}"}}"
     rules:
     - nonResourceURLs:
       - /metrics
@@ -80,19 +80,19 @@ spec:
   - apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRoleBinding
     metadata:
-      name: "{{.Namespace}}-{{.HookName}}"
+      name: "{{"{{.Namespace}}-{{.HookName}}"}}"
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole
-      name: "{{.Namespace}}-{{.HookName}}"
+      name: "{{"{{.Namespace}}-{{.HookName}}"}}"
     subjects:
     - kind: ServiceAccount
       name: default
-      namespace: "{{.Namespace}}"
+      namespace: "{{"{{.Namespace}}"}}"
   - apiVersion: rbac.authorization.k8s.io/v1
     kind: Role
     metadata:
-      name: "{{.HookName}}"
+      name: "{{"{{.HookName}}"}}"
     rules:
     - apiGroups:
       - ""
@@ -158,35 +158,35 @@ spec:
   - apiVersion: rbac.authorization.k8s.io/v1
     kind: RoleBinding
     metadata:
-      name: "{{.HookName}}"
+      name: "{{"{{.HookName}}"}}"
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: Role
-      name: "{{.HookName}}"
+      name: "{{"{{.HookName}}"}}"
     subjects:
     - kind: ServiceAccount
       name: default
-      namespace: "{{.Namespace}}"
+      namespace: "{{"{{.Namespace}}"}}"
   - apiVersion: batch/v1
     kind: Job
     metadata:
-      name: "{{.HookName}}"
+      name: "{{"{{.HookName}}"}}"
     spec:
       template:
         spec:
           containers:
-          - name: "{{.HookName}}"
+          - name: "{{"{{.HookName}}"}}"
             image: quay.io/kubestellar/helm:3.14.0
             imagePullPolicy: IfNotPresent
             args:
               - upgrade
               - --install
               - -n
-              - "{{.Namespace}}"
+              - "{{"{{.Namespace}}"}}"
               - kubestellar
               - oci://ghcr.io/kubestellar/kubestellar/kubestellar-operator-chart
               - --version
-              - "0.20.0-alpha.1"
+              - {{.Values.pch.kubestellar.version}}
               - --set
               - "ControlPlaneName={{.ControlPlaneName}}"
             env:
@@ -196,7 +196,7 @@ spec:
       backoffLimit: 1
 {{- end }}
 
-{{- if eq (toString .Values.pch.ocm) "true" }}
+{{- if .Values.pch.ocm }}
 ---
 apiVersion: tenancy.kflex.kubestellar.org/v1alpha1
 kind: PostCreateHook
@@ -209,13 +209,13 @@ spec:
   - apiVersion: batch/v1
     kind: Job
     metadata:
-      name: "{{.HookName}}"
+      name: "{{"{{.HookName}}"}}"
     spec:
       template:
         spec:
           containers:
-          - name: "{{.HookName}}"
-            image: quay.io/kubestellar/clusteradm:0.7.2
+          - name: "{{"{{.HookName}}"}}"
+            image: quay.io/kubestellar/clusteradm:{{.Values.pch.ocm.version}}
             args:
             - init
             env:
