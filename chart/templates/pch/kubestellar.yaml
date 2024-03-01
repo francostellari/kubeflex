@@ -1,4 +1,4 @@
-{{- if .Values.pch.kubestellar }}
+{{- if and .Values.pch .Values.pch.kubestellar }}
 ---
 apiVersion: tenancy.kflex.kubestellar.org/v1alpha1
 kind: PostCreateHook
@@ -192,43 +192,6 @@ spec:
             env:
             - name: XDG_CACHE_HOME
               value: /tmp/helm/.cache
-          restartPolicy: Never
-      backoffLimit: 1
-{{- end }}
-
-{{- if .Values.pch.ocm }}
----
-apiVersion: tenancy.kflex.kubestellar.org/v1alpha1
-kind: PostCreateHook
-metadata:
-  name: ocm
-  labels:
-    kflex.kubestellar.io/cptype: imbs
-spec:
-  templates:
-  - apiVersion: batch/v1
-    kind: Job
-    metadata:
-      name: "{{"{{.HookName}}"}}"
-    spec:
-      template:
-        spec:
-          containers:
-          - name: "{{"{{.HookName}}"}}"
-            image: quay.io/kubestellar/clusteradm:{{.Values.pch.ocm.version}}
-            args:
-            - init
-            env:
-            - name: KUBECONFIG
-              value: "/etc/kube/config-incluster"
-            volumeMounts:
-            - name: kubeconfig
-              mountPath: "/etc/kube"
-              readOnly: true
-          volumes:
-          - name: kubeconfig
-            secret:
-              secretName: vc-vcluster
           restartPolicy: Never
       backoffLimit: 1
 {{- end }}
